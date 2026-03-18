@@ -6,6 +6,9 @@ SQLAlchemy>=2.0.0
 pymysql>=1.1.0
 psycopg2-binary>=2.9.0
 
+# Cálculo de festivos
+holidays>=0.46
+
 #Para configuracion y lectura de variables de entorno
 PyYAML>=6.0
 python-dotenv>=1.0.0
