@@ -1,0 +1,40 @@
+# Variables de entorno
+.env
+
+# Carpetas del entorno virtual, se recrea en local
+venv/
+env/
+.venv/
+
+# Carpetas de logs generados
+logs/
+
+# Archivos de cache generados
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Fichero de cobertura de los test
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Carpeta de cacheo del IDE
+.vscode/
+.idea/
+*.swp
+
+# Algunos ficheros del sistema
+.DS_Store
+Thumbs.db
+
+# Los Ficheros de tipo excel que esten alojados de forma local, en caso de que esten, no deben ser subidos al git porque pueden contener info sensible
+*.xlsx
+*.xls
+
+# Carpetas de distribucion de Python
+dist/
+build/
+*.egg-info/

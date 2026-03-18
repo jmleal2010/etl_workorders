@@ -1,0 +1,23 @@
+mysql:
+  host: "localhost"
+  port: 3306
+  database: "factory_db"
+  user: "etl_user"
+  password: "etl_password"
+
+excel:
+  path: "ruta al archivo"
+  sheet_name: "Equipos"
+
+datamart:
+  host: "localhost"
+  port: 5432
+  database: "datamart_practica_diusframi"
+  user: "dm_user"
+  password: "dm_pass"
+
+etl:
+  start_date: "2025-01-01"
+  batch_days: 7
+  festivity_country: "ES"
+  festivity_region: "AN"

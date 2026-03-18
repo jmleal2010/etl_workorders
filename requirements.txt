@@ -1,0 +1,3 @@
+#Para configuracion y lectura de variables de entorno
+PyYAML>=6.0
+python-dotenv>=1.0.0
