@@ -1,20 +1,20 @@
 mysql:
-  host: "localhost"
-  port: 3306
-  database: "factory_db"
-  user: "etl_user"
-  password: "etl_password"
+  host: ${MYSQL_HOST}
+  port: ${MYSQL_PORT}
+  database: ${MYSQL_DATABASENAME}
+  user: ${MYSQL_USERNAME}
+  password: ${MYSQL_USERPASSWORD}
 
 excel:
-  path: "ruta al archivo"
-  sheet_name: "Equipos"
+  path: ${EXCEL_PATH}
+  sheet_name: ${EXCEL_SHEET_NAME}
 
 datamart:
-  host: "localhost"
-  port: 5432
-  database: "datamart_practica_diusframi"
-  user: "dm_user"
-  password: "dm_pass"
+  host: ${DM_HOST}
+  port: ${DM_PORT}
+  database: ${DM_DBNAME}
+  user: ${DM_USER}
+  password: ${DM_PASSWORD}
 
 etl:
   start_date: "2025-01-01"
