@@ -22,7 +22,35 @@ El proceso sigue una arquitectura clásica ETL donde se establecen las fuentes d
 ---
 ## Estructura del Proyecto
 ```
-
+etl_diusframi/
+│
+├── config/
+│   └── config.yaml             # Configuración de conexiones y parámetros del ETL
+│
+├── src/
+│   ├── extractors/
+│   │   ├── mysql_extractor.py  # Extrae datos de MySQL (carga incremental)
+│   │   └── excel_extractor.py  # Lee el fichero Excel de equipos
+│   │
+│   ├── transformers/
+│   │   └── data_transformer.py # Limpieza, validación y cálculo de métricas
+│   │
+│   ├── loaders/
+│   │   └── datamart_loader.py  # Carga los datos en PostgreSQL (upsert)
+│   │
+│   └── utils/
+│       ├── config_loader.py    # Carga el fichero config.yaml
+│       ├── logger.py           # Configuración centralizada de logging
+│       └── sla_calculator.py   # Cálculo de días hábiles (tiempo SLA)
+│
+├── sql/
+│   └── create_datamart.sql     # DDL para crear las tablas del DataMart
+├── logs/                       # Carpeta de logs (se crea automáticamente)
+│
+├── main.py                     # Punto de entrada del ETL
+├── requirements.txt            # Dependencias Python
+├── .env.example                # Plantilla para variables de entorno
+└── README.md                   # Este fichero
 ```
 ## Requisitos previos
 - **Python 3.10** o superior
@@ -85,7 +113,7 @@ mysql:
   port: 3306
   database: "factoria_db"
   user: "etl_user"
-  password: "etl_password"   # O usa la variable de entorno MYSQL_PASSWORD
+  password: "etl_password" 
 
 # Origen 2: Excel
 excel:
@@ -98,14 +126,14 @@ datamart:
   port: 5432
   database: "datamart_diusframi"
   user: "dm_user"
-  password: "dm_password"    # O usa la variable de entorno DATAMART_PASSWORD
+  password: "dm_password"   
 
 # Parámetros del proceso
 etl:
-  fecha_inicio_historico: "2025-01-01"  # Punto 7: primera carga histórica
-  batch_dias: 7                          # Punto 6: lotes para recuperación
+  fecha_inicio_historico: "2025-01-01"  
+  batch_dias: 7                          
   pais_festivos: "ES"
-  subdivision_festivos: "AN"            # AN=Andalucía, MD=Madrid, CT=Cataluña...
+  subdivision_festivos: "AN"           
 ```
 
 > **Buena práctica de seguridad**: Definir las contraseñas en el fichero `.env`
@@ -116,10 +144,19 @@ etl:
 
 ## Cómo ejecutar el ETL
 
+
+### Inicializar el DataMart
+
+```bash
+python main.py --init
+# Inicializar el dataMart
+```
+
 ### Ejecución normal (diaria)
 
 ```bash
 python main.py
+# Ejecución normal
 ```
 
 El ETL determinará automáticamente el período a procesar basándose en la
@@ -132,13 +169,7 @@ y carga todo el histórico desde `fecha_inicio_historico` (por defecto `2025-01-
 
 ```bash
 python main.py
-# ✓ Primera ejecución detectada. Se cargará el histórico desde 2025-01-01.
-```
-
-### Inicializar el DataMart
-
-```bash
-python main.py --init
+# Primera ejecución detectada. Se cargará el histórico desde 2025-01-01.
 ```
 
 ### Usar un fichero de configuración alternativo
