@@ -1,6 +1,5 @@
 import logging
 import os
-from typing import Dict
 
 import pandas as pd
 
@@ -16,7 +15,7 @@ class ExcelExtractor:
         if not os.path.exists(self.path):
             raise FileNotFoundError(
                 f"No se pudo encontrar el fichero Excel en : {self.path}\n"
-                "Comprueba que el usuario ha depositado el fichero en la carpeta de red"
+                "Comprueba que existe el fichero"
             )
 
         logger.info(f"Leyendo fichero Excel: {self.path} (hoja: {self.sheet})")

@@ -8,7 +8,7 @@ from src.utils.sla_calculator import calculate_sla_time, calculate_total_time
 
 logger = logging.getLogger(__name__)
 
-def crear_error(order_id: str, error_type: str, details: str) -> dict:
+def create_error(order_id: str, error_type: str, details: str) -> dict:
     return {
         "orden_id": order_id,
         "tipo_error": error_type,
@@ -94,7 +94,7 @@ class DataTransformer:
         not_entry_date = df['fecha_alta'].isna()
         for order_id in df.loc[not_entry_date, "num_orden"]:
             logger.warning(f"Orden {order_id}: falta fecha_alta. Se descarta.")
-            errors.append(crear_error(
+            errors.append(create_error(
                 order_id,
                 "FECHA_ALTA_NULA",
                 "La orden no tiene fecha de alta y no puede procesarse."
@@ -106,7 +106,7 @@ class DataTransformer:
         without_equipment = df["identificador_equipo"].isna() | (df["identificador_equipo"].astype(str).str.strip() == "")
         for orden_id in df.loc[without_equipment, "num_orden"]:
             logger.warning(f"Orden {orden_id}: falta identificador_equipo.")
-            errors.append(crear_error(
+            errors.append(create_error(
                 orden_id,
                 "EQUIPO_ID_NULO",
                 "La orden no tiene identificador de equipo."
@@ -125,7 +125,7 @@ class DataTransformer:
                     f"Orden {row['num_orden']}: equipo '{row['identificador_equipo']}' "
                     f"no encontrado en el Excel."
                 )
-                errors.append(crear_error(
+                errors.append(create_error(
                     row["num_orden"],
                     "EQUIPO_NO_EN_EXCEL",
                     f"El equipo '{row['identificador_equipo']}' no está en el maestro de equipos."
@@ -204,9 +204,12 @@ class DataTransformer:
             )
             df.at[idx, "tiempo_sla"] = calculate_sla_time(
                 start_date, end_date,
-                pais=self.pais,
-                subdivision=self.subdivision,
+                country=self.country,
+                region=self.region,
             )
+
+        df["tiempo_total_trabajo"] = df["tiempo_total_trabajo"].astype("Int64")
+        df["tiempo_sla"] = df["tiempo_sla"].astype("Int64")
 
         df["fecha_actualizacion"] = datetime.now()
 

@@ -4,7 +4,6 @@ import logging
 
 import pandas as pd
 from sqlalchemy import create_engine, text
-from sqlalchemy.testing.config import Config
 
 logger = logging.getLogger(__name__)
 
@@ -15,14 +14,18 @@ class MysqlExtractor:
         self.engine = None
 
     def _connect(self):
-        url = (
-            f"mysql+pymysql://{self.config['user']}:{self.config['password']}"
-            f"@{self.config['host']}:{self.config['port']}/{self.config['database']}"
-            f"?charset=utf8mb4"
+        from sqlalchemy.engine import URL
+        url = URL.create(
+            drivername="mysql+pymysql",
+            username=self.config["user"],
+            password=self.config["password"],
+            host=self.config["host"],
+            port=int(self.config["port"]),
+            database=self.config["database"],
+            query={"charset": "utf8mb4"},
         )
-
         self.engine = create_engine(url)
-        logger.debug("Conexión establecida con MYSQL")
+        logger.debug("Conexión a MySQL establecida.")
 
     def _disconnect(self):
         if self.engine:
@@ -38,7 +41,7 @@ class MysqlExtractor:
                             o.fecha_cierre
                      FROM ordenes_trabajo o
                      WHERE o.num_orden IN (
-                         -- Solo órdenes que tienen actividad en el período
+
                          SELECT DISTINCT a.num_orden
                          FROM actividad a
                          WHERE a.fecha_hora_actividad >= :start_date
